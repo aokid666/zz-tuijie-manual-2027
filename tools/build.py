@@ -43,8 +43,16 @@ if __name__=='__main__':
  jobs=[]
  for s in sources:
   p=ROOT/'input'/f'{s["id"]}.pdf'
-  with p.open('wb') as f:
-   for part in s['parts']:f.write((ROOT/part).read_bytes())
+  if s.get('volumes'):
+   merged=fitz.open();expected=1
+   for v in s['volumes']:
+    raw=(ROOT/v['path']).read_bytes();assert len(raw)==v['bytes'] and hashlib.sha256(raw).hexdigest()==v['sha256'];assert v['first']==expected
+    volume=fitz.open(stream=raw,filetype='pdf');assert len(volume)==v['last']-v['first']+1;merged.insert_pdf(volume);volume.close();expected=v['last']+1
+    # Original volume bytes remain available in the repository.
+   assert len(merged)==s['expectedPages'];merged.save(p,garbage=0,deflate=False,no_new_id=True);merged.close();s['sha256']=hashlib.sha256(p.read_bytes()).hexdigest();s['bytes']=p.stat().st_size
+  else:
+   with p.open('wb') as f:
+    for part in s['parts']:f.write((ROOT/part).read_bytes())
   assert hashlib.sha256(p.read_bytes()).hexdigest()==s['sha256'];(OUT/'pdf'/p.name).write_bytes(p.read_bytes());s['pageCount']=len(fitz.open(p));jobs.extend((s['id'],n) for n in range(1,s['pageCount']+1))
  records=collections.defaultdict(list)
  with concurrent.futures.ProcessPoolExecutor(max_workers=4,initializer=ocr_init) as ex:

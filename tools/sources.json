@@ -1,5 +1,109 @@
 [
   {
+    "id": "tuijie-manual-upper",
+    "name": "27腿姐冲刺背诵手册-上册.pdf",
+    "volumes": [
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P001-019.pdf",
+        "first": 1,
+        "last": 19,
+        "bytes": 23179461,
+        "sha256": "63dc9f3e2b2a18970e236391e977e71531318131a458e209b313bb2b31e96670",
+        "path": "pdf/tuijie-manual-upper-P001-019.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P020-041.pdf",
+        "first": 20,
+        "last": 41,
+        "bytes": 22485889,
+        "sha256": "1f351015b7a7b8231d7c575407aeeffa75dcb491637c32be57ddb2f9ea298791",
+        "path": "pdf/tuijie-manual-upper-P020-041.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P042-062.pdf",
+        "first": 42,
+        "last": 62,
+        "bytes": 21937521,
+        "sha256": "e2b739c9f19c5848690fc110297be767eb4cef0339c9f1cc3f7fc5f8e0a8bfcf",
+        "path": "pdf/tuijie-manual-upper-P042-062.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P063-081.pdf",
+        "first": 63,
+        "last": 81,
+        "bytes": 21629518,
+        "sha256": "539c60bbc0bd68d0bd91b449a72b21d4e10680f117b52a20227079fac4c9d961",
+        "path": "pdf/tuijie-manual-upper-P063-081.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P082-102.pdf",
+        "first": 82,
+        "last": 102,
+        "bytes": 22100075,
+        "sha256": "618dc6b9b75b8f272f71671e9b783475525aa05c40b86a1ce23b537029d8ca36",
+        "path": "pdf/tuijie-manual-upper-P082-102.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P103-125.pdf",
+        "first": 103,
+        "last": 125,
+        "bytes": 22088436,
+        "sha256": "a88217cff316103ffce66f64cd45f448aebb985f4bff66cb0b1055586e258b62",
+        "path": "pdf/tuijie-manual-upper-P103-125.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P126-145.pdf",
+        "first": 126,
+        "last": 145,
+        "bytes": 21611346,
+        "sha256": "a753f2d831171a7b8ee71c3c0961136c2c7dc2499ee16709f52ed05fd4047093",
+        "path": "pdf/tuijie-manual-upper-P126-145.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P146-164.pdf",
+        "first": 146,
+        "last": 164,
+        "bytes": 22082861,
+        "sha256": "37f0262c7fac0b623726caa26a7c61d8b848de4cdf62a3a19233a607088e7d8e",
+        "path": "pdf/tuijie-manual-upper-P146-164.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P165-185.pdf",
+        "first": 165,
+        "last": 185,
+        "bytes": 22589278,
+        "sha256": "04014533a467ba4fe25b8a5ffc001a32f87c20412b6266a299b6e88059982020",
+        "path": "pdf/tuijie-manual-upper-P165-185.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P186-205.pdf",
+        "first": 186,
+        "last": 205,
+        "bytes": 22032646,
+        "sha256": "950063e7492810cc31cc194868f585e7ed22a16e67c3647e98038dae07882877",
+        "path": "pdf/tuijie-manual-upper-P186-205.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P206-227.pdf",
+        "first": 206,
+        "last": 227,
+        "bytes": 21989295,
+        "sha256": "ac30070a18d59fb0f3ac1faffe5f8507f032e3d5eb59d14b3e3a5e13231204ad",
+        "path": "pdf/tuijie-manual-upper-P206-227.pdf"
+      },
+      {
+        "name": "27腿姐冲刺背诵手册-上册_P228-245.pdf",
+        "first": 228,
+        "last": 245,
+        "bytes": 15441561,
+        "sha256": "ea70863ae01ff2c8afd3fc02d471b468e49dbe03943154b75c99f62a85ff11a2",
+        "path": "pdf/tuijie-manual-upper-P228-245.pdf"
+      }
+    ],
+    "expectedPages": 245,
+    "originalBytes": 259167887
+  },
+  {
     "id": "tuijie-manual-lower",
     "name": "27腿姐冲刺背诵手册-下册.pdf",
     "parts": [
