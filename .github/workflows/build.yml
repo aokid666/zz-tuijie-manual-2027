@@ -1,7 +1,7 @@
 name: Audit and build original sources
 on:
   push:
-    paths: ['pdf/**', 'tools/**', '.github/workflows/build.yml']
+    paths: ['pdf/**', 'tools/build.py', 'tools/sources.json', '.github/workflows/build.yml']
   workflow_dispatch:
 permissions:
   contents: write
