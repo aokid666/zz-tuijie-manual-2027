@@ -23,28 +23,36 @@ def crop(p,rs):
  pg=ps[p-1];y=max(35,min(l['b'][1] for l in rs)-4);bot=min(pg['height']-35,max(l['b'][3] for l in rs)+7);return {'page':p,'b':[25,y,pg['width']-50,bot-y]}
 # Query only genuine正文 pages; self-test pages contain intentionally incorrect statements.
 corpus=[p for p in ps if p['page']>=11 and p['page'] not in TEST]
+WINDOWS=collections.defaultdict(list)
+for p in corpus:
+ rs=[l for l in p['lines'] if 40<l['b'][1]<p['height']-35]
+ for i in range(len(rs)):
+  chunk=rs[max(0,i-1):i+6];t=norm(''.join(l['t'] for l in chunk));grams={t[j:j+3] for j in range(len(t)-2)};WINDOWS[mod(p['page'])].append((p,chunk,t,grams))
 def evidence(query,module):
- q=norm(query);candidates=[]
- for p in corpus:
-  if mod(p['page'])!=module:continue
-  rs=[l for l in p['lines'] if 40<l['b'][1]<p['height']-35]
-  for i in range(len(rs)):
-   chunk=rs[max(0,i-1):i+6];t=norm(''.join(l['t'] for l in chunk));matches=difflib.SequenceMatcher(None,q,t,autojunk=False).get_matching_blocks();run=max((m.size for m in matches),default=0);covered=sum(m.size for m in matches if m.size>=3)
-   score=run*2+covered-len(t)*.006
-   if run>=4:candidates.append((score,run,p,chunk))
+ q=norm(query);qgrams={q[j:j+3] for j in range(len(q)-2)};candidates=[]
+ shortlist=sorted(WINDOWS[module],key=lambda row:len(qgrams & row[3]),reverse=True)[:45]
+ for p,chunk,t,grams in shortlist:
+  matches=difflib.SequenceMatcher(None,q,t,autojunk=False).get_matching_blocks();run=max((m.size for m in matches),default=0);covered=sum(m.size for m in matches if m.size>=3);score=run*2+covered-len(t)*.006
+  if run>=4:candidates.append((score,run,p,chunk))
  if not candidates:return None
  _,run,p,chunk=max(candidates,key=lambda x:(x[0],x[1]));quote='\n'.join(l['t'] for l in chunk);return crop(p['page'],chunk),{'source':SID,'page':p['page'],'quote':quote,'method':'original-exercise-corresponding-handbook-text'},run
 
 def base(p,no,kind,stem,qrefs,queries):
  block=max(b for b in blocks if b<=p);title=next((l['t'] for l in ps[block-1]['lines'] if '背诵自测总结' in l['t']),'背诵自测总结');chapter=mod(p)+' · '+title.replace('背诵自测总结','自测');proof=[];refs=[]
- for hint in queries:
-  found=evidence(hint,mod(p))
+ for hi,hint in enumerate(queries):
+  binding=cfg.get('evidenceBindings',{}).get(f'{p}/{kind}/{no}') or (cfg.get('matchingEvidenceBindings',{}).get(str(p),{}).get(str(hi+1)) if kind=='matching' else None)
+  found=None
+  if binding:
+   pn,anchor,*note=binding;pg=ps[pn-1];rs=[l for l in pg['lines'] if 40<l['b'][1]<pg['height']-35];idx=next(i for i,l in enumerate(rs) if anchor in l['t']);chunk=rs[max(0,idx-2):idx+8];e={'source':SID,'page':pn,'quote':'\n'.join(l['t'] for l in chunk),'method':'reviewed-handbook-passage'}
+   if note:e['note']=note[0]
+   found=(crop(pn,chunk),e,len(norm(anchor)))
+  else:found=evidence(hint,mod(p))
   if found:
    r,e,run=found
    if not any(x['page']==r['page'] and x['b']==r['b'] for x in refs):refs.append(r);proof.append(e)
    audit.append({'p':p,'no':no,'kind':kind,'query':hint,'sourcePage':r['page'],'longestRun':run,'quote':e['quote']})
   else:errors.append(f'{p}/{kind}/{no}: no source passage for {hint}')
- q={'id':f'pr-{ID}-{kind}-{p:03}-{no:02}','bookId':ID,'type':'matching' if kind=='matching' else 'written','source':'p','moduleIdx':14,'module':'腿姐背诵手册自测','subject':mod(p),'chapter':chapter,'chapterTitle':chapter,'section':{'judgement':'判断并订正','blank':'原书填空','matching':'关键词连线','drawing':'画图自测'}[kind],'no':no,'originalNo':no,'stem':stem,'options':{},'multi':False,'answer':'','qRefs':qrefs,'keyRefs':refs,'analysis':[{'k':'手册正文对照（请据此核对原题）','t':'\n\n'.join('上册 PDF 第 '+str(e['page'])+' 页：\n'+e['quote'] for e in proof)}],'extraLectures':proof,'kPages':[],'sPages':[],'mRefs':[],'aPages':[],'aCrops':[],'sourceWarning':'原书自测答案另有二维码。本页提供同册正文对照，不冒充二维码官方解析；判断订正、填空与画图由本人核对后自评。','extractionNote':'准确空白、表格与版面以原图为准。'};qs.append(q);return q
+ q={'id':f'pr-{ID}-{kind}-{p:03}-{no:02}','bookId':ID,'type':'matching' if kind=='matching' else 'written','source':'p','moduleIdx':14,'module':'腿姐背诵手册自测','subject':mod(p),'chapter':chapter,'chapterTitle':chapter,'section':{'judgement':'判断并订正','blank':'原书填空','matching':'关键词连线','drawing':'画图自测'}[kind],'no':no,'originalNo':no,'stem':stem,'options':{},'multi':False,'answer':'','qRefs':qrefs,'keyRefs':refs,'analysis':[{'k':'手册正文对照（请据此核对原题）','t':'\n\n'.join((e.get('note','')+'\n' if e.get('note') else '')+'上册 PDF 第 '+str(e['page'])+' 页：\n'+e['quote'] for e in proof)}],'extraLectures':proof,'kPages':[],'sPages':[],'mRefs':[],'aPages':[],'aCrops':[],'sourceWarning':'原书自测答案另有二维码。本页提供同册正文对照，不冒充二维码官方解析；判断订正、填空与画图由本人核对后自评。','extractionNote':'准确空白、表格与版面以原图为准。'};qs.append(q);return q
 for p,hints in J.items():
  ls,_,_=zone(p,'判断下列表述');gs=numbered(ls)
  if [g['no'] for g in gs]!=list(range(1,len(hints)+1)):errors.append(f'{p}: judgement boundaries {[g["no"] for g in gs]}')
